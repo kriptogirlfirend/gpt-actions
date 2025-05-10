@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Semantic Scholar Search API
+  version: 1.0.0
+  description: Secure search for scholarly articles based on keywords.
+
+servers:
+  - url: https://api.semanticscholar.org/graph/v1
+
+paths:
+  /paper/search:
+    get:
+      summary: Search for scholarly papers
+      operationId: searchPapers
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: The keyword or phrase to search for.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+        - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
+            default: title,authors,year,url
+      responses:
+        '200':
+          description: List of relevant papers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        paperId:
+                          type: string
+                        title:
+                          type: string
+                        year:
+                          type: integer
+                        url:
+                          type: string
+                        authors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+security:
+  - ApiKeyAuth: []
