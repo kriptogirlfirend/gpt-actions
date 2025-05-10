@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: Internet Archive Search API
+  version: 1.0.0
+  description: Search for items (including books) on the Internet Archive.
+
+servers:
+  - url: https://archive.org
+
+paths:
+  /search:
+    get:
+      summary: Search the Internet Archive
+      operationId: searchArchive
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The search query (title, author, keywords, etc.).
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: false
+          description: A comma-separated list of fields to return.
+          schema:
+            type: string
+            default: title,creator,identifier,date
+        - name: sort
+          in: query
+          required: false
+          description: Field to sort results by (e.g., title, date).  Add " desc" for descending order.
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: The page number of the results.
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: Number of results per page. Max is 200.
+          schema:
+            type: integer
+            default: 10
+        - name: output
+          in: query
+          required: false
+          description: The format of the response.
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseHeader:
+                    type: object
+                    properties:
+                      status:
+                        type: integer
+                        description: The status code of the response.
+                      QTime:
+                        type: integer
+                        description: The time taken to process the query.
+                      params:
+                        type: object
+                        description: The query parameters.
+                  response:
+                    type: object
+                    properties:
+                      numFound:
+                        type: integer
+                        description: The total number of matching items.
+                      start:
+                        type: integer
+                        description: The starting index of the results.
+                      docs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              type: string
+                              description: The title of the item.
+                            creator:
+                              type: string
+                              description: The creator of the item (e.g., author).
+                            identifier:
+                              type: string
+                              description: The unique identifier for the item.
+                            date:
+                              type: string
+                              description: The date the item was added or created.
+                            [other_fields]: # Add other relevant fields as needed
+                              type: string
+                              description: Description of the field.
