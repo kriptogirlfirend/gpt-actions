@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info:
+  title: Open Library Search API
+  version: 1.0.0
+  description: Search for books in the Open Library catalog.
+
+servers:
+  - url: https://openlibrary.org
+
+paths:
+  /search.json:
+    get:
+      summary: Search for books
+      operationId: searchBooks
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The search query (title, author, subject, etc.).
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: false
+          description: Search by title.
+          schema:
+            type: string
+        - name: author
+          in: query
+          required: false
+          description: Search by author.
+          schema:
+            type: string
+        - name: subject
+          in: query
+          required: false
+          description: Search by subject.
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: The page number of the results.
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of results per page.
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  numFound:
+                    type: integer
+                    description: The total number of matching books.
+                  start:
+                    type: integer
+                    description: The starting index of the results.
+                  docs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: The title of the book.
+                        author_name:
+                          type: array
+                          items:
+                            type: string
+                          description: The name(s) of the author(s).
+                        isbn:
+                          type: array
+                          items:
+                            type: string
+                          description: ISBN(s) for the book.
+                        cover_i:
+                          type: integer
+                          description: The Open Library ID for the cover image.
+                        key:
+                          type: string
+                          description: The Open Library ID for the book.
+                        first_publish_year:
+                          type: integer
+                          description: The year the book was first published.
